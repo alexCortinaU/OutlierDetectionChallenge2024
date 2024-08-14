@@ -1,8 +1,8 @@
 {
-    "team_name": "ChangeYourTeamName",
-    "method_description": "ChangeYourMethodName",
+    "team_name": "MASKETeers",
+    "method_description": "featureExtract",
     "data_types": "Mesh, segmentation, image or a hybrid",
-    "data_dir": "D:\\OutlierChallenge2024\\challenge_data\\",
-    "result_dir": "D:\\OutlierChallenge2024\\challenge_results\\",
+    "data_dir": "/mrhome/kristine/Documents/02985_SummerSchool/challenge_data/",
+    "result_dir": "/mrhome/kristine/Documents/02985_SummerSchool/challenge_data/challenge_results",
     "challenge_server":  "http://fungi.compute.dtu.dk:8080"
 }
