@@ -1,8 +1,8 @@
 {
-    "team_name": "ChangeYourTeamName",
-    "method_description": "ChangeYourMethodName",
-    "data_types": "Mesh, segmentation, image or a hybrid",
-    "data_dir": "D:\\OutlierChallenge2024\\challenge_data\\",
-    "result_dir": "D:\\OutlierChallenge2024\\challenge_results\\",
+    "team_name": "MASKETeers",
+    "method_description": "shapefeatures-RF",
+    "data_types": "mesh",
+    "data_dir": "/media/7tb_encrypted/od_chall/dataset/challenge_data",
+    "result_dir": "/home/alejandrocu/OutlierDetectionChallenge2024/mesh_results",
     "challenge_server":  "http://fungi.compute.dtu.dk:8080"
 }

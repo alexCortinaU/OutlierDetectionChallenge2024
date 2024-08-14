@@ -1,0 +1,809 @@
+{
+    "team_name": "MASKETeers",
+    "method_name": "shapefeatures-RF",
+    "timestamp": "Tue Aug 13 18:15:05 2024",
+    "data_set": "test_files_200.txt",
+    "data_types": "mesh",
+    "results": [
+        {
+            "scan_id": "sample_0004",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0006",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0009",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0012",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0013",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0029",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0030",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0046",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0051",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0052",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0054",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0063",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0072",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0073",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0075",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0077",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0080",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0084",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0086",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0088",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0091",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0100",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0102",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0119",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0124",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0130",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0137",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0143",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0150",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0158",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0166",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0177",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0184",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0185",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0187",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0192",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0199",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0201",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0223",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0230",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0235",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0255",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0256",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0261",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0263",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0269",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0273",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0275",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0277",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0285",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0289",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0293",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0294",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0298",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0302",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0304",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0307",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0309",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0312",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0313",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0322",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0324",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0325",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0329",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0331",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0332",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0336",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0338",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0341",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0344",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0354",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0360",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0364",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0369",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0372",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0381",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0390",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0392",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0394",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0395",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0403",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0406",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0408",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0411",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0418",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0422",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0428",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0431",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0433",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0437",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0438",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0440",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0448",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0456",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0458",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0461",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0462",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0476",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0479",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0498",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0503",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0508",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0522",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0527",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0536",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0552",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0555",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0557",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0573",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0576",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0584",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0590",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0594",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0596",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0599",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0605",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0617",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0620",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0623",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0630",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0631",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0642",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0643",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0644",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0650",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0651",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0654",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0669",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0674",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0675",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0689",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0697",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0709",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0713",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0720",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0723",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0725",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0733",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0737",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0739",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0741",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0748",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0757",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0763",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0765",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0768",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0771",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0776",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0779",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0781",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0782",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0787",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0792",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0797",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0798",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0799",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0801",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0802",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0807",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0811",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0820",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0838",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0840",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0848",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0855",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0868",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0872",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0875",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0876",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0882",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0907",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0917",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0924",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0927",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_0964",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0986",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0992",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_0998",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_1001",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_1005",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_1006",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_1010",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_1013",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_1016",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_1029",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_1030",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_1033",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_1035",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_1049",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_1056",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_1069",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_1072",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_1075",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_1079",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_1080",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_1082",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_1083",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_1088",
+            "outlier": 1
+        },
+        {
+            "scan_id": "sample_1093",
+            "outlier": 0
+        },
+        {
+            "scan_id": "sample_1099",
+            "outlier": 0
+        }
+    ]
+}
