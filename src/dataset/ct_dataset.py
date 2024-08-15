@@ -11,8 +11,8 @@ from pathlib import Path
 import pandas as pd
 import torchio as tio
 
-class CBCTDataset(Dataset):
-    def __init__(self, data_path, train_ids, transform=None, labelling='binary'):
+class CTDataset(Dataset):
+    def __init__(self, data_path, split_ids, transform=None, labelling='binary'):
 
         if not Path(data_path).exists():
             raise FileNotFoundError(f'File {data_path} does not exist')
@@ -24,7 +24,7 @@ class CBCTDataset(Dataset):
         self.data_path = Path(data_path)
         self.transform = transform
         self.df = pd.read_csv(csv_path)
-        self.df = self.df[self.df['sample_id'].isin(train_ids)]
+        self.df = self.df[self.df['sample_id'].isin(split_ids)]
         self.df = self.df.reset_index(drop=True)
         if labelling == 'binary':
             self.df['label'] = self.df['label'].apply(lambda x: 0 if x == 'normal' else 1)
@@ -44,17 +44,14 @@ class CBCTDataset(Dataset):
         img_path = self.data_path / 'crops' / self.df['img_name'].iloc[idx]
         # img = nib.load(img_path).get_fdata()
         img = tio.ScalarImage(img_path)
-
-        if self.crop_to_body:
-            margins_to_crop = self.df['margins_to_crop'].iloc[idx]
-            img = tio.Crop(margins_to_crop)(img)
             
         if self.transform:  
             img = self.transform(img)
         
-        return img.data, self.df['label'].iloc[idx]
+        return {'image': img.data, 
+                'lable': self.df['label'].iloc[idx]}
 
-class CBCTDataModule(LightningDataModule):
+class CTDataModule(LightningDataModule):
     """
     Read the docs:
         https://lightning.ai/docs/pytorch/latest/data/datamodule.html
@@ -68,15 +65,9 @@ class CBCTDataModule(LightningDataModule):
         pin_memory: bool = False,
         voxel_size=(1, 1, 1),
         crop_size=(128, 128, 128),
-        patch_size = 16,
-        pred_mask_scale = (0.2, 0.8),
-        enc_mask_scale = (0.2, 0.8),
-        aspect_ratio = (0.3, 3.0),
-        num_enc_masks = 1,
-        num_pred_masks = 4,
-        block_depth = 3,
-        allow_overlap = False,
-        min_keep = 10,
+        train_ids=None,
+        val_ids=None,
+        labelling='binary',
         transforms = None
     ) -> None:
         
@@ -98,43 +89,17 @@ class CBCTDataModule(LightningDataModule):
         else:
             self.transforms = transforms
         
-        self.mask_collator = MaskCollator3D(
-            input_size=crop_size,
-            patch_size=patch_size,
-            pred_mask_scale=pred_mask_scale,
-            enc_mask_scale=enc_mask_scale,
-            aspect_ratio=aspect_ratio,
-            nenc=num_enc_masks,
-            npred=num_pred_masks,
-            block_depth=block_depth,
-            allow_overlap=allow_overlap,
-            min_keep=min_keep
-        )
-
-        self.data_train = CBCTDataset(data_path=data_path, train=True, crop_to_body=True, transform=self.transforms)
-        self.data_val = CBCTDataset(data_path=data_path, train=False, crop_to_body=True, transform=self.transforms)
+        self.data_train = CTDataset(data_path=data_path,
+                                    split_ids=train_ids,
+                                    transform=self.transforms,
+                                    labelling=labelling)
+        self.data_val = CTDataset(data_path=data_path,
+                                  split_ids=val_ids,
+                                  transform=self.transforms,
+                                  labelling=labelling)
         # self.data_val: Optional[Dataset] = None
 
         self.batch_size_per_device = batch_size
-
-    # @property
-    # def num_classes(self) -> int:
-    #     """Get the number of classes.
-
-    #     :return: The number of MNIST classes (10).
-    #     """
-    #     return 10
-
-    # def prepare_data(self) -> None:
-    #     """Download data if needed. Lightning ensures that `self.prepare_data()` is called only
-    #     within a single process on CPU, so you can safely add your downloading logic within. In
-    #     case of multi-node training, the execution of this hook depends upon
-    #     `self.prepare_data_per_node()`.
-
-    #     Do not use it to assign state (self.x = y).
-    #     """
-    #     MNIST(self.hparams.data_dir, train=True, download=True)
-    #     MNIST(self.hparams.data_dir, train=False, download=True)
 
     def setup(self, stage: Optional[str] = None) -> None:
         """Load data. Set variables: `self.data_train`, `self.data_val`, `self.data_test`.
@@ -172,7 +137,6 @@ class CBCTDataModule(LightningDataModule):
         """
         return DataLoader(
             dataset=self.data_train,
-            collate_fn=self.mask_collator,
             drop_last=True,
             batch_size=self.batch_size_per_device,
             num_workers=self.hparams.num_workers,
@@ -187,7 +151,6 @@ class CBCTDataModule(LightningDataModule):
         """
         return DataLoader(
             dataset=self.data_val,
-            collate_fn=self.mask_collator,
             batch_size=self.batch_size_per_device,
             drop_last=True,
             num_workers=self.hparams.num_workers,
@@ -209,30 +172,8 @@ class CBCTDataModule(LightningDataModule):
             shuffle=False,
         )
 
-    def teardown(self, stage: Optional[str] = None) -> None:
-        """Lightning hook for cleaning up after `trainer.fit()`, `trainer.validate()`,
-        `trainer.test()`, and `trainer.predict()`.
 
-        :param stage: The stage being torn down. Either `"fit"`, `"validate"`, `"test"`, or `"predict"`.
-            Defaults to ``None``.
-        """
-        pass
-
-    def state_dict(self) -> Dict[Any, Any]:
-        """Called when saving a checkpoint. Implement to generate and save the datamodule state.
-
-        :return: A dictionary containing the datamodule state that you want to save.
-        """
-        return {}
-
-    def load_state_dict(self, state_dict: Dict[str, Any]) -> None:
-        """Called when loading a checkpoint. Implement to reload datamodule state given datamodule
-        `state_dict()`.
-
-        :param state_dict: The datamodule state returned by `self.state_dict()`.
-        """
-        pass
 
 
 if __name__ == "__main__":
-    _ = CBCTDataModule()
+    _ = CTDataModule()
