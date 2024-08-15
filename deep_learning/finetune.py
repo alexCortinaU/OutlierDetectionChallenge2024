@@ -5,6 +5,7 @@ from torchvision import transforms
 import lightning as pl
 from lightning.pytorch.loggers import WandbLogger
 from lightning.pytorch.callbacks import ModelCheckpoint
+import sys, shutil
 import wandb
 wandb.login()
 
@@ -28,16 +29,18 @@ from src.models.components.attentive_pooler import AttentiveClassifier
 
 
 # Initialize the Lightning DataModule
-batch_size = 3
+batch_size = 10
 num_workers = 4
 voxel_size = (1, 1, 1) #(0.5, 0.5, 0.5) #(1.171875, 1.171875, 2.5) #(1.5, 1.5, 1.5)
 crop_size = (128, 128, 128) #(336, 224, 64) #(128, 128, 128)
-lr = 1e-4
-max_epochs = 10
+lr = 1e-3
+max_epochs = 20
 # train_ids = pd.read_csv(this_path / "custom_train_list_100.txt", header=None)[0].tolist()
 # val_ids = pd.read_csv(this_path / "custom_validation_list_100.txt", header=None)[0].tolist()
-sample_ids = glob.glob(str(crops_path / "*_crop.nii.gz"))
-sample_ids = [Path(x).name.split('_crop')[0] for x in sample_ids]
+# sample_ids = glob.glob(str(crops_path / "*_crop.nii.gz"))
+# sample_ids = [Path(x).name.split('_crop')[0] for x in sample_ids]
+metadata = pd.read_csv(data_path / "train/metadata.csv")
+sample_ids = metadata['sample_id'].unique()
 train_ids, val_ids = train_test_split(sample_ids, test_size=0.2, random_state=42)
 
 transforms = tio.Compose([
@@ -72,12 +75,18 @@ model = FineTuneModule(image_encoder=sam_model.image_encoder,
                        classifier=classifier,
                        lr=lr)
 # Initialize the Lightning Trainer
+run_name = sys.argv[1]
+ckp_path = this_path / f"SS24/{run_name}/checkpoints/"
+if not ckp_path.exists:
+    ckp_path.mkdir(parents=True)
 wandb_logger = WandbLogger(log_model="all",
-                           project="SS24",)
+                           project="SS24",
+                           name=run_name)
 checkpoint_callback = ModelCheckpoint(monitor="val/loss",
                                       mode="min",
+                                      dirpath=ckp_path,
                                       filename='{epoch}-{val/loss:.2f}')
-trainer = pl.Trainer(devices=[1],
+trainer = pl.Trainer(devices=[0],
                      max_epochs=max_epochs,
                      logger=wandb_logger,)
 # Train the model
