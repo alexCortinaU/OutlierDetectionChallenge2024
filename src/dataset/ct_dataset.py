@@ -12,29 +12,36 @@ import pandas as pd
 import torchio as tio
 
 class CBCTDataset(Dataset):
-    def __init__(self, data_path, train=True, crop_to_body=True, transform=None):
+    def __init__(self, data_path, train_ids, transform=None, labelling='binary'):
 
         if not Path(data_path).exists():
             raise FileNotFoundError(f'File {data_path} does not exist')
         
-        csv_path = Path(data_path) / 'cbct_dataset.csv'
+        csv_path = Path(data_path) / 'metadata.csv'
         if not Path(csv_path).exists():
             raise FileNotFoundError(f'File {csv_path} does not exist')
         
         self.data_path = Path(data_path)
-        self.crop_to_body = crop_to_body
         self.transform = transform
-        self.split = 'train' if train else 'test'
         self.df = pd.read_csv(csv_path)
-        self.df = self.df[self.df.split == self.split].reset_index(drop=True)
-        self.df['margins_to_crop'] = self.df['margins_to_crop'].apply(ast.literal_eval)
+        self.df = self.df[self.df['sample_id'].isin(train_ids)]
+        self.df = self.df.reset_index(drop=True)
+        if labelling == 'binary':
+            self.df['label'] = self.df['label'].apply(lambda x: 0 if x == 'normal' else 1)
+        else:
+            self.df['label'] = self.df['label'].map({'normal': 0,
+                                                     'warp': 1,
+                                                     'sphere_water': 2,
+                                                     'sphere_mean': 3,})
+        print(f'Loaded {len(self.df)} samples')
+        print(f'Label distribution: {self.df["label"].value_counts()}')
 
     def __len__(self):
         return len(self.df)
     
     def __getitem__(self, idx):
 
-        img_path = self.data_path / self.split / self.df['cbct_file'].iloc[idx]
+        img_path = self.data_path / 'crops' / self.df['img_name'].iloc[idx]
         # img = nib.load(img_path).get_fdata()
         img = tio.ScalarImage(img_path)
 
@@ -45,7 +52,7 @@ class CBCTDataset(Dataset):
         if self.transform:  
             img = self.transform(img)
         
-        return img.data
+        return img.data, self.df['label'].iloc[idx]
 
 class CBCTDataModule(LightningDataModule):
     """

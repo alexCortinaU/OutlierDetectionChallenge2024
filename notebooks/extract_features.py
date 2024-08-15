@@ -6,7 +6,7 @@ from tqdm import tqdm
 import multiprocessing
 from radiomics import featureextractor  # Assuming this is the correct import for your feature extractor
 data_path = Path("/media/7tb_encrypted/od_chall/dataset/challenge_data")
-crops_path = data_path / "train/crops"
+crops_path = data_path / "test/crops"
 this_path = Path().resolve()
 import glob, os
 
@@ -14,9 +14,10 @@ import glob, os
 params = this_path / 'notebooks/Params.yaml'
 
 file_types = {'normal': '',
-              'sphere_mean': '_sphere_outlier_mean_std_inpaint',
-              'sphere_water': '_sphere_outlier_water',
-              'warp': '_warp_outlier'}
+            #   'sphere_mean': '_sphere_outlier_mean_std_inpaint',
+            #   'sphere_water': '_sphere_outlier_water',
+            #   'warp': '_warp_outlier'
+              }
 
 def process_sample(sample_file_type):
     sample, file_type = sample_file_type
@@ -58,4 +59,4 @@ if __name__ == '__main__':
     
     # Convert results to DataFrame and save
     df = pd.DataFrame(results)
-    df.to_csv('radiomics_features.csv', index=False)
+    df.to_csv('test_radiomics_features.csv', index=False)
