@@ -1,6 +1,6 @@
 import torch
-import pytorch_lightning as pl
-from pytorch_lightning.metrics import MeanMetric, MinMetric
+import lightning as pl
+from torchmetrics import MeanMetric, MinMetric, Accuracy
 
 import torch.nn as nn
 import torch.optim as optim
@@ -9,18 +9,17 @@ class FineTuneModule(pl.LightningModule):
     def __init__(self,
                  image_encoder: torch.nn.Module,
                  classifier: torch.nn.Module,
-                 loss: torch.nn.BCELoss,
-                 optimizer: torch.optim.AdamW,
-                 scheduler: torch.optim.lr_scheduler,
-                 num_epochs: int,
                  lr: float,
+                 loss = torch.nn.BCEWithLogitsLoss, #torch.nn.BCELoss, #torch.nn.CrossEntropyLoss,
+                 optimizer = torch.optim.AdamW,
+                #  scheduler: torch.optim.lr_scheduler,
+                 num_epochs: int = 10,
                  ):
         super().__init__()
 
         self.save_hyperparameters(logger=True,
                                   ignore=['image_encoder',
-                                          'pooler',
-                                          'head'])
+                                          'classifier'])
         # freeze image encoder
         self.image_encoder = image_encoder
         self.image_encoder.eval()
@@ -29,85 +28,85 @@ class FineTuneModule(pl.LightningModule):
         self.classifier = classifier
         self.min_val_loss = MinMetric()
         self.val_loss = MeanMetric()
-        self.val_r2 = R2Score()
-        self.val_pearson = PearsonCorrCoef()
-        self.val_step_outs = []
+        self.val_acc = Accuracy(task='binary')
+        self.train_acc = Accuracy(task='binary')
         self.loss = loss()
 
     def training_step(self, batch, batch_idx):
-        x, y = batch
-        with torch.no_grad():
-            x = self.image_encoder(x, return_embds=True)
-
-        x = self.pooler(x)
-        if isinstance(self.pooler, AttentivePooler):
-            x = x.squeeze(1)
+        x, y = batch['image'], batch['label']
         
-        logits = self.head(x)
-        loss = self.loss(logits, y.unsqueeze(1))
+        with torch.no_grad():
+            x = self.image_encoder(x)
+
+        B, L = x.shape[:2]
+        x = x.reshape(B, L, -1).permute(0, 2, 1)
+
+        logits = self.classifier(x)
+        loss = self.loss(logits, y.unsqueeze(1).float())
+        acc = self.train_acc(logits.squeeze(), y.squeeze())
 
         self.log('train/loss',
                  loss, on_step=True,
                  on_epoch=True,
-                 sync_dist=True)
+                 sync_dist=True, 
+                 prog_bar=True)
+        self.log('train/acc',
+                 acc, on_step=False,
+                 on_epoch=True,
+                 sync_dist=True,
+                 prog_bar=True)
         
         return loss
     
     def validation_step(self, batch, batch_idx):
-        x, y = batch
+        x, y = batch['image'], batch['label']
+
         with torch.no_grad():
-            x = self.image_encoder(x, return_embds=True)
-            
-        x = self.pooler(x)
-        if isinstance(self.pooler, AttentivePooler):
-            x = x.squeeze(1)
-        logits = self.head(x)
+            x = self.image_encoder(x)
+        
+        B, L = x.shape[:2]
+        x = x.reshape(B, L, -1).permute(0, 2, 1)
 
-        self.val_step_outs.append(torch.stack([logits.squeeze().clone().detach(),
-                                               y.clone().detach()], dim=1))
-
-        loss = self.loss(logits, y.unsqueeze(1))
+        logits = self.classifier(x)
+        loss = self.loss(logits, y.unsqueeze(1).float())
         self.val_loss.update(loss)
 
-        r2score = self.val_r2(logits.squeeze(), y.squeeze())
-        pcorr = self.val_pearson(logits.squeeze(), y.squeeze())
+        acc = self.val_acc(logits.squeeze(), y.squeeze())
 
         self.log('val/loss',
                  loss, on_step=True,
                  on_epoch=True,
-                 sync_dist=True)
+                 sync_dist=True,
+                 prog_bar=True)
         
-        self.log('val/r2',
-                 r2score, on_step=False,
+        self.log('val/acc',
+                 acc, on_step=False,
                  on_epoch=True,
-                 sync_dist=True)
-        
-        self.log('val/pearson',
-                 pcorr, on_step=False,
-                 on_epoch=True,
-                 sync_dist=True)
+                 sync_dist=True,
+                 prog_bar=True)
         
         return loss
-    def __init__(self):
-        super().__init__()
-        # Define your image_encoder and AttentiveClassifier here
-        
-    def forward(self, x):
-        # Implement the forward pass of your model here
-        pass
     
-    def training_step(self, batch, batch_idx):
-        # Implement the training step logic here
-        pass
-    
-    def validation_step(self, batch, batch_idx):
-        # Implement the validation step logic here
-        pass
-    
-    def test_step(self, batch, batch_idx):
-        # Implement the test step logic here
-        pass
+    def on_train_start(self):
+        self.val_loss.reset()
     
     def configure_optimizers(self):
-        optimizer = optim.Adam(self.parameters(), lr=1e-3)
-        return optimizer
+        param_groups = [
+            {'params': self.classifier.parameters()},
+        ]
+        optimizer = self.hparams.optimizer(params=param_groups,
+                                           lr=self.hparams.lr,
+                                           eps=1e-8)
+        # if self.hparams.scheduler:
+        #     scheduler = self.hparams.scheduler(optimizer=optimizer)
+        #     return {
+        #         'optimizer': optimizer,
+        #         'lr_scheduler': {
+        #             'scheduler': scheduler,
+        #             'monitor': 'val_loss',
+        #             'interval': 'epoch',
+        #             'frequency': 1,
+        #         }
+        #     }
+        
+        return {'optimizer': optimizer}

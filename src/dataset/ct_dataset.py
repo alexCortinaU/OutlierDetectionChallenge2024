@@ -33,6 +33,8 @@ class CTDataset(Dataset):
                                                      'warp': 1,
                                                      'sphere_water': 2,
                                                      'sphere_mean': 3,})
+        # one-hot encode labels
+
         print(f'Loaded {len(self.df)} samples')
         print(f'Label distribution: {self.df["label"].value_counts()}')
 
@@ -49,7 +51,7 @@ class CTDataset(Dataset):
             img = self.transform(img)
         
         return {'image': img.data, 
-                'lable': self.df['label'].iloc[idx]}
+                'label': self.df['label'].iloc[idx]}
 
 class CTDataModule(LightningDataModule):
     """
@@ -119,16 +121,16 @@ class CTDataModule(LightningDataModule):
                 )
             self.batch_size_per_device = self.hparams.batch_size // self.trainer.world_size
 
-        # load and split datasets only if not loaded already
-        if not self.data_train and not self.data_val and not self.data_test:
-            trainset = MNIST(self.hparams.data_dir, train=True, transform=self.transforms)
-            testset = MNIST(self.hparams.data_dir, train=False, transform=self.transforms)
-            dataset = ConcatDataset(datasets=[trainset, testset])
-            self.data_train, self.data_val, self.data_test = random_split(
-                dataset=dataset,
-                lengths=self.hparams.train_val_test_split,
-                generator=torch.Generator().manual_seed(42),
-            )
+        # # load and split datasets only if not loaded already
+        # if not self.data_train and not self.data_val and not self.data_test:
+        #     trainset = MNIST(self.hparams.data_dir, train=True, transform=self.transforms)
+        #     testset = MNIST(self.hparams.data_dir, train=False, transform=self.transforms)
+        #     dataset = ConcatDataset(datasets=[trainset, testset])
+        #     self.data_train, self.data_val, self.data_test = random_split(
+        #         dataset=dataset,
+        #         lengths=self.hparams.train_val_test_split,
+        #         generator=torch.Generator().manual_seed(42),
+        #     )
 
     def train_dataloader(self) -> DataLoader[Any]:
         """Create and return the train dataloader.
