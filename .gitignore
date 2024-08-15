@@ -3,7 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 challenge_results/
-
+*.pth
+deep_learning/lightning_logs/
+SS24/
+wandb/
 # C extensions
 *.so
 
