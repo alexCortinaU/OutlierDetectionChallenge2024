@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 challenge_results/
+*.pth
 
 # C extensions
 *.so

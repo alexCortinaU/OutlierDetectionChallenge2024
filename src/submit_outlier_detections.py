@@ -24,7 +24,7 @@ def sanitize_string(string_in):
 
 def submit_outlier_detections(settings):
     result_dir = settings["result_dir"]
-    test_results_json = os.path.join(result_dir, "test_results.json")
+    test_results_json = os.path.join(result_dir, "test_results_fixed.json")
     data_set = settings["data_set"]
     team_name = settings["team_name"]
     method_name = settings["method_description"]

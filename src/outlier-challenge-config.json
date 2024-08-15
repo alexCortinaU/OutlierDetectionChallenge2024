@@ -1,6 +1,6 @@
 {
     "team_name": "MASKETeers",
-    "method_description": "shapefeatures-RF-2.0",
+    "method_description": "shapefeatures-RF-3.0",
     "data_types": "mesh",
     "data_dir": "/media/7tb_encrypted/od_chall/dataset/challenge_data",
     "result_dir": "/home/alejandrocu/OutlierDetectionChallenge2024/mesh_results",
