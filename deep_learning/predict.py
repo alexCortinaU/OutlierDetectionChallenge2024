@@ -4,6 +4,7 @@ from torch.utils.data import DataLoader
 import torchio as tio
 from pathlib import Path
 import pandas as pd
+import numpy as np
 
 from torchvision import transforms
 from torchvision.datasets import ImageFolder
@@ -35,7 +36,7 @@ def main():
                                     num_classes=1,
                                     num_heads=8,)
 
-    checkpoint_path = "/home/alejandrocu/OutlierDetectionChallenge2024/deep_learning/SS24/lv6dq2xs/checkpoints/epoch=9-step=5810.ckpt"
+    checkpoint_path = "/home/alejandrocu/OutlierDetectionChallenge2024/deep_learning/SS24/us876b33/checkpoints/epoch=9-step=5810.ckpt"
     model = FineTuneModule.load_from_checkpoint(checkpoint_path,
                                                 image_encoder=sam_model.image_encoder,
                                                 classifier=classifier)
@@ -75,14 +76,17 @@ def main():
             images = batch["image"].to(device)
             output = model(images)
             logit = output.cpu().numpy()
+            # print(np.squeeze(logit))
             bin_pred = 1 if logit >= threshold else 0
-            predictions.extend({'scan_id': batch['id'],
+            # print(bin_pred)
+            predictions.append({'scan_id': batch['id'][0],
                                 'outlier': bin_pred,
-                                'logit': logit})
+                                # 'logit': np.squeeze(logit)
+                                })
 
     import json
     # Write results to JSON file
-    with open(this_path/'test_results_sammed.json', 'w') as json_file:
+    with open(this_path/'test_results_sammed_final.json', 'w') as json_file:
         json.dump(predictions, json_file, indent=4)
     # # Generate the final results file
     # results_file = "/path/to/results.txt"

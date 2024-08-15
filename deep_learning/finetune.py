@@ -34,7 +34,7 @@ num_workers = 4
 voxel_size = (1, 1, 1) #(0.5, 0.5, 0.5) #(1.171875, 1.171875, 2.5) #(1.5, 1.5, 1.5)
 crop_size = (128, 128, 128) #(336, 224, 64) #(128, 128, 128)
 lr = 1e-3
-max_epochs = 20
+max_epochs = 50
 # train_ids = pd.read_csv(this_path / "custom_train_list_100.txt", header=None)[0].tolist()
 # val_ids = pd.read_csv(this_path / "custom_validation_list_100.txt", header=None)[0].tolist()
 # sample_ids = glob.glob(str(crops_path / "*_crop.nii.gz"))
@@ -82,8 +82,8 @@ if not ckp_path.exists:
 wandb_logger = WandbLogger(log_model="all",
                            project="SS24",
                            name=run_name)
-checkpoint_callback = ModelCheckpoint(monitor="val/loss",
-                                      mode="min",
+checkpoint_callback = ModelCheckpoint(monitor="val/acc",
+                                      mode="max",
                                       dirpath=ckp_path,
                                       filename='{epoch}-{val/loss:.2f}')
 trainer = pl.Trainer(devices=[0],

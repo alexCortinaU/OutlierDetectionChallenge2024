@@ -129,17 +129,17 @@ class AttentiveClassifier(nn.Module):
             qkv_bias=qkv_bias,
             complete_block=complete_block,
         )
-        self.mlp = MLP(
-            in_features=embed_dim,
-            hidden_features=embed_dim,
-            out_features=embed_dim,
-            act_layer=nn.GELU,
-            drop=0.1,
-        )
+        # self.mlp = MLP(
+        #     in_features=embed_dim,
+        #     hidden_features=embed_dim,
+        #     out_features=embed_dim,
+        #     act_layer=nn.GELU,
+        #     drop=0.1,
+        # )
         self.linear = nn.Linear(embed_dim, num_classes, bias=True)
 
     def forward(self, x):
         x = self.pooler(x).squeeze(1)
-        x = self.mlp(x)
+        # x = self.mlp(x)
         x = self.linear(x)
         return x

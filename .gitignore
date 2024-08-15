@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 challenge_results/
+mesh_results/
+radiomics_results/
+
 *.pth
 deep_learning/lightning_logs/
 SS24/
