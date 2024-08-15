@@ -3,13 +3,20 @@ from torch import nn
 from torch.utils.data import DataLoader
 import torchio as tio
 from pathlib import Path
+import pandas as pd
+
 from torchvision import transforms
 from torchvision.datasets import ImageFolder
 from lightning import LightningModule, Trainer
 from lightning.pytorch.callbacks import ModelCheckpoint
 
 from src.models.sammed_class import FineTuneModule
-from src.dataset.ct_dataset import CTDataModule, CTDataset
+from src.dataset.ct_dataset import CTDataModule, CTDatasetTEST
+from tqdm import tqdm
+
+from src.models.build_sam3D import sam_model_registry3D
+from src.models.sammed_class import FineTuneModule
+from src.models.components.attentive_pooler import AttentiveClassifier
 
 
 this_path = Path().resolve()
@@ -18,8 +25,20 @@ crops_path = data_path / "test/crops"
 
 def main():
     # Load the pretrained model from checkpoint
-    checkpoint_path = "/path/to/checkpoint.pt"
-    model = FineTuneModule.load_from_checkpoint(checkpoint_path)
+    ckpt_path = data_path.parent / 'sam_med3d_turbo.pth'
+    sam_model = sam_model_registry3D['vit_b_ori'](checkpoint=None) #vit_b_ori
+    with open(ckpt_path, "rb") as f:
+            state_dict = torch.load(f)
+            sam_model.load_state_dict(state_dict['model_state_dict'])
+
+    classifier = AttentiveClassifier(embed_dim=384,
+                                    num_classes=1,
+                                    num_heads=8,)
+
+    checkpoint_path = "/home/alejandrocu/OutlierDetectionChallenge2024/deep_learning/SS24/lv6dq2xs/checkpoints/epoch=9-step=5810.ckpt"
+    model = FineTuneModule.load_from_checkpoint(checkpoint_path,
+                                                image_encoder=sam_model.image_encoder,
+                                                classifier=classifier)
 
     # Create the datamodule
 
@@ -31,31 +50,45 @@ def main():
                             tio.transforms.CropOrPad(crop_size, padding_mode=-1000), # padding_mode=0), #
                             tio.transforms.Clamp(-1000, 1000),
                             tio.transforms.RescaleIntensity(out_min_max=(0.0, 1.0), in_min_max=(-1000, 1000))
-                            ])  
-    dataset = ImageFolder(data_dir, transform=transforms)
-    dataloader = DataLoader(dataset, batch_size=32, shuffle=False)
+                            ]) 
+    test_ids = pd.read_csv(this_path.parent / "challenge_results/test_files_200.txt", header=None)[0].tolist()
+    print(f'Number of test samples: {len(test_ids)}')
+    df = pd.DataFrame({'sample_id': test_ids})
+
+    data_test = CTDatasetTEST(data_path=data_path/'test',
+                              test_df=df,
+                              transform=transforms)
+    dataloader = DataLoader(data_test, batch_size=1, shuffle=False)
+
+    print(f'Loaded {len(data_test)} samples')
+    print(f'{len(dataloader)} batches')
 
     # Run prediction
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
     model = model.to(device)
     model.eval()
 
     predictions = []
-    with torch.no_grad():
-        for images, _ in dataloader:
-            images = images.to(device)
-            outputs = model(images)
-            predictions.extend(outputs.cpu().numpy())
-
-    # Binarize the predictions
     threshold = 0.5
-    binarized_predictions = [1 if pred >= threshold else 0 for pred in predictions]
+    with torch.no_grad():
+        for batch in tqdm(dataloader, total=len(dataloader)):
+            images = batch["image"].to(device)
+            output = model(images)
+            logit = output.cpu().numpy()
+            bin_pred = 1 if logit >= threshold else 0
+            predictions.extend({'scan_id': batch['id'],
+                                'outlier': bin_pred,
+                                'logit': logit})
 
-    # Generate the final results file
-    results_file = "/path/to/results.txt"
-    with open(results_file, "w") as f:
-        for pred in binarized_predictions:
-            f.write(str(pred) + "\n")
+    import json
+    # Write results to JSON file
+    with open(this_path/'test_results_sammed.json', 'w') as json_file:
+        json.dump(predictions, json_file, indent=4)
+    # # Generate the final results file
+    # results_file = "/path/to/results.txt"
+    # with open(results_file, "w") as f:
+    #     for pred in binarized_predictions:
+    #         f.write(str(pred) + "\n")
 
 if __name__ == "__main__":
     main()

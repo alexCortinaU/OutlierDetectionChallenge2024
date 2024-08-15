@@ -31,6 +31,15 @@ class FineTuneModule(pl.LightningModule):
         self.val_acc = Accuracy(task='binary')
         self.train_acc = Accuracy(task='binary')
         self.loss = loss()
+    
+    def forward(self, x):
+        if isinstance(x, dict):
+            x = x['image']
+        x = self.image_encoder(x)
+        B, L = x.shape[:2]
+        x = x.reshape(B, L, -1).permute(0, 2, 1)
+        logits = self.classifier(x)
+        return logits
 
     def training_step(self, batch, batch_idx):
         x, y = batch['image'], batch['label']

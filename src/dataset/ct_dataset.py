@@ -11,6 +11,34 @@ from pathlib import Path
 import pandas as pd
 import torchio as tio
 
+class CTDatasetTEST(Dataset):
+    def __init__(self, data_path, test_df, transform=None):
+
+        if not Path(data_path).exists():
+            raise FileNotFoundError(f'File {data_path} does not exist')
+         
+        self.data_path = Path(data_path)
+        self.transform = transform
+        self.df = test_df
+        self.df = self.df.reset_index(drop=True)
+        
+        print(f'Loaded {len(self.df)} samples')
+
+    def __len__(self):
+        return len(self.df)
+    
+    def __getitem__(self, idx):
+        sample_id = self.df['sample_id'].iloc[idx]
+        img_path = self.data_path / 'crops' / f"{sample_id}_crop.nii.gz"
+        # img = nib.load(img_path).get_fdata()
+        img = tio.ScalarImage(img_path)
+            
+        if self.transform:  
+            img = self.transform(img)
+        
+        return {'id': sample_id,
+                'image': img.data}
+
 class CTDataset(Dataset):
     def __init__(self, data_path, split_ids, transform=None, labelling='binary'):
 
